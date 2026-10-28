@@ -1,4 +1,4 @@
-# UniFi Security (unifi_security) v0.1.3
+# UniFi Security (unifi_security) v0.1.4
 
 Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`).
 
@@ -28,6 +28,7 @@ All detections ship **disabled**. Enable the ones you want in Settings > Searche
 
 ## Release notes
 
+- **0.1.4** — Added app icons and logos (`static/`).
 - **0.1.3** — Detections ship disabled, with `schedule_window = auto` and staggered schedules. Added `[id]` stanza and `app.manifest`; update checks enabled.
 - **0.1.2** — Apache 2.0 LICENSE included in the package.
 - **0.1.1** — Released alongside TA-unifi_security 0.1.1.

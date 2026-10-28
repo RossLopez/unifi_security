@@ -9,6 +9,7 @@ Requires the **UniFi Security Add-on** ([`TA-unifi_security`](https://github.com
 | Path | Purpose |
 |---|---|
 | `unifi_security/` | The app itself (packaged as-is). See its [README](unifi_security/README.md) for the dashboard, detections and macros. |
+| `scripts/build_icons.py` | Renders `assets/` (SVG sources, 512px Splunkbase listing icon) and the app's `static/` icons and logos (`pip install resvg-py`) |
 | `scripts/package.sh` | Builds `dist/unifi_security-<version>.spl` |
 | `docs/ROADMAP.md` | Backlog, Splunkbase checklist and release history |
 
