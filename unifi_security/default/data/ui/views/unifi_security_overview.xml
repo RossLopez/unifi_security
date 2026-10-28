@@ -1,0 +1,564 @@
+<dashboard version="2" theme="dark">
+  <label>UniFi Security Overview</label>
+  <description>IPS/IDS, firewall, admin access, rogue AP and WiFi authentication activity from UniFi.</description>
+  <definition><![CDATA[
+{
+  "title": "UniFi Security Overview",
+  "description": "IPS/IDS, firewall, admin access, rogue AP and WiFi authentication activity from UniFi gateways, APs and switches (UniFi Security Add-on).",
+  "inputs": {
+    "input_time": {
+      "type": "input.timerange",
+      "title": "Time range",
+      "options": {
+        "token": "global_time",
+        "defaultValue": "-24h@h,now"
+      }
+    }
+  },
+  "defaults": {
+    "dataSources": {
+      "ds.search": {
+        "options": {
+          "queryParameters": {
+            "earliest": "$global_time.earliest$",
+            "latest": "$global_time.latest$"
+          }
+        }
+      }
+    }
+  },
+  "dataSources": {
+    "ds_kpi_ips": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_ips` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_ips"
+    },
+    "ds_kpi_ips_out": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_ips` | where `unifi_is_private(src)` AND NOT `unifi_is_private(dest)` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_ips_out"
+    },
+    "ds_kpi_fw": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_fw_block` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_fw"
+    },
+    "ds_kpi_admin": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_admin_access` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_admin"
+    },
+    "ds_kpi_rogue": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_rogue_ap` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_rogue"
+    },
+    "ds_kpi_wifi": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_wifi_auth_failure` | stats count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_kpi_wifi"
+    },
+    "ds_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_index` (eventtype=unifi_ips_threat OR eventtype=unifi_firewall_block OR eventtype=unifi_admin_access OR eventtype=unifi_rogue_ap OR eventtype=unifi_wifi_auth_failure OR eventtype=unifi_ssh_auth) | eval type=case(isnotnull(mvfind(eventtype,\"^unifi_ips_threat$\")),\"IPS\", isnotnull(mvfind(eventtype,\"^unifi_firewall_block$\")),\"Firewall block\", isnotnull(mvfind(eventtype,\"^unifi_admin_access$\")),\"Admin access\", isnotnull(mvfind(eventtype,\"^unifi_rogue_ap$\")),\"Rogue AP\", isnotnull(mvfind(eventtype,\"^unifi_wifi_auth_failure$\")),\"WiFi auth failure\", true(),\"SSH\") | timechart count by type",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_trend"
+    },
+    "ds_sigs": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_ips` | stats count dc(src) as sources dc(dest) as targets values(action) as action latest(severity) as severity by signature category | sort - count | head 15",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_sigs"
+    },
+    "ds_ipsgeo": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_ips` | `unifi_geo(src)` | stats count by src_country | sort - count | head 10",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_ipsgeo"
+    },
+    "ds_ipsev": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_ips` | `unifi_geo(src)` | table _time src src_country dest dest_port transport signature category severity action direction | sort - _time | head 100",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_ipsev"
+    },
+    "ds_fwclient": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_fw_block` | eval client=coalesce(client_name, src) | stats count by client | sort - count | head 10",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_fwclient"
+    },
+    "ds_fwdom": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_fw_block` | eval destination=coalesce(dest_domain, dest) | stats count dc(src) as clients values(app) as app by destination | sort - count | head 15",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_fwdom"
+    },
+    "ds_fwrule": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_index` eventtype=unifi_fw_rule_log | stats count values(dest_port) as dest_port by rule src dest action | sort - count | head 15",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_fwrule"
+    },
+    "ds_admin": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_admin_access` | `unifi_geo(src)` | table _time user src src_country app dvc msg | sort - _time | head 50",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_admin"
+    },
+    "ds_wifi": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_wifi_auth_failure` | stats count as failures dc(host) as aps values(host) as ap latest(_time) as last_seen by src_mac | convert ctime(last_seen) | sort - failures | head 15",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_wifi"
+    },
+    "ds_rogue": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_rogue_ap` | stats count latest(_time) as last_seen values(UNIFIwifiChannel) as channel values(UNIFIdetectedByApAndSignalStrength) as detected_by by ssid UNIFIbssid | rename UNIFIbssid as bssid | convert ctime(last_seen)",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_rogue"
+    },
+    "ds_priv": {
+      "type": "ds.search",
+      "options": {
+        "query": "`unifi_index` (eventtype=unifi_sudo OR eventtype=unifi_ssh_auth) | fillnull value=\"-\" src_user user command action | stats count latest(_time) as last_seen values(command) as command by host app src_user user action | convert ctime(last_seen) | sort - count",
+        "queryParameters": {
+          "earliest": "$global_time.earliest$",
+          "latest": "$global_time.latest$"
+        }
+      },
+      "name": "ds_priv"
+    }
+  },
+  "visualizations": {
+    "viz_kpi_ips": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_ips"
+      },
+      "title": "IPS detections",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_kpi_ips_out": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_ips_out"
+      },
+      "title": "Outbound IPS (internal src)",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_kpi_fw": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_fw"
+      },
+      "title": "Firewall blocks",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_kpi_admin": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_admin"
+      },
+      "title": "Admin access",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_kpi_rogue": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_rogue"
+      },
+      "title": "Rogue AP detections",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_kpi_wifi": {
+      "type": "splunk.singlevalue",
+      "dataSources": {
+        "primary": "ds_kpi_wifi"
+      },
+      "title": "WiFi auth failures",
+      "options": {
+        "majorFontSize": 40
+      }
+    },
+    "viz_trend": {
+      "type": "splunk.column",
+      "dataSources": {
+        "primary": "ds_trend"
+      },
+      "title": "Security events over time",
+      "options": {
+        "stackMode": "stacked",
+        "legendDisplay": "bottom"
+      }
+    },
+    "viz_sigs": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_sigs"
+      },
+      "title": "Top IPS signatures",
+      "options": {}
+    },
+    "viz_ipsgeo": {
+      "type": "splunk.bar",
+      "dataSources": {
+        "primary": "ds_ipsgeo"
+      },
+      "title": "IPS sources by country",
+      "options": {
+        "legendDisplay": "off"
+      }
+    },
+    "viz_ipsev": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_ipsev"
+      },
+      "title": "Recent IPS events",
+      "options": {}
+    },
+    "viz_fwclient": {
+      "type": "splunk.bar",
+      "dataSources": {
+        "primary": "ds_fwclient"
+      },
+      "title": "Firewall blocks by client",
+      "options": {
+        "legendDisplay": "off"
+      }
+    },
+    "viz_fwdom": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_fwdom"
+      },
+      "title": "Top blocked destinations",
+      "options": {}
+    },
+    "viz_fwrule": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_fwrule"
+      },
+      "title": "Firewall / NAT rule log hits (UniFi OS)",
+      "options": {}
+    },
+    "viz_admin": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_admin"
+      },
+      "title": "Admin access",
+      "options": {}
+    },
+    "viz_wifi": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_wifi"
+      },
+      "title": "WiFi auth failures by client MAC",
+      "options": {}
+    },
+    "viz_rogue": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_rogue"
+      },
+      "title": "Rogue / impersonating APs",
+      "options": {}
+    },
+    "viz_priv": {
+      "type": "splunk.table",
+      "dataSources": {
+        "primary": "ds_priv"
+      },
+      "title": "Privileged activity on UniFi OS (sudo / SSH)",
+      "options": {}
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1880,
+      "display": "auto-scale"
+    },
+    "globalInputs": [
+      "input_time"
+    ],
+    "structure": [
+      {
+        "item": "viz_kpi_ips",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_kpi_ips_out",
+        "type": "block",
+        "position": {
+          "x": 240,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_kpi_fw",
+        "type": "block",
+        "position": {
+          "x": 480,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_kpi_admin",
+        "type": "block",
+        "position": {
+          "x": 720,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_kpi_rogue",
+        "type": "block",
+        "position": {
+          "x": 960,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_kpi_wifi",
+        "type": "block",
+        "position": {
+          "x": 1200,
+          "y": 0,
+          "w": 240,
+          "h": 110
+        }
+      },
+      {
+        "item": "viz_trend",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 110,
+          "w": 1440,
+          "h": 260
+        }
+      },
+      {
+        "item": "viz_sigs",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 370,
+          "w": 840,
+          "h": 320
+        }
+      },
+      {
+        "item": "viz_ipsgeo",
+        "type": "block",
+        "position": {
+          "x": 840,
+          "y": 370,
+          "w": 600,
+          "h": 320
+        }
+      },
+      {
+        "item": "viz_ipsev",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 690,
+          "w": 1440,
+          "h": 300
+        }
+      },
+      {
+        "item": "viz_fwclient",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 990,
+          "w": 480,
+          "h": 320
+        }
+      },
+      {
+        "item": "viz_fwdom",
+        "type": "block",
+        "position": {
+          "x": 480,
+          "y": 990,
+          "w": 480,
+          "h": 320
+        }
+      },
+      {
+        "item": "viz_fwrule",
+        "type": "block",
+        "position": {
+          "x": 960,
+          "y": 990,
+          "w": 480,
+          "h": 320
+        }
+      },
+      {
+        "item": "viz_admin",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 1310,
+          "w": 720,
+          "h": 300
+        }
+      },
+      {
+        "item": "viz_wifi",
+        "type": "block",
+        "position": {
+          "x": 720,
+          "y": 1310,
+          "w": 720,
+          "h": 300
+        }
+      },
+      {
+        "item": "viz_rogue",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 1610,
+          "w": 720,
+          "h": 260
+        }
+      },
+      {
+        "item": "viz_priv",
+        "type": "block",
+        "position": {
+          "x": 720,
+          "y": 1610,
+          "w": 720,
+          "h": 260
+        }
+      }
+    ]
+  }
+}
+  ]]></definition>
+  <meta type="hiddenElements"><![CDATA[
+{"hideEdit": false, "hideOpenInSearch": false, "hideExport": false}
+  ]]></meta>
+</dashboard>

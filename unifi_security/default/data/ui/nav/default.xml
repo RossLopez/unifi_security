@@ -1,0 +1,15 @@
+<nav search_view="search" color="#1F6FEB">
+  <view name="unifi_security_overview" default="true" />
+  <collection label="Investigate">
+    <view name="search" />
+    <a href="search?q=%60unifi_ips%60%20%7C%20table%20_time%20src%20dest%20dest_port%20signature%20category%20severity%20action">IPS events</a>
+    <a href="search?q=%60unifi_fw%60%20%7C%20table%20_time%20client_name%20src%20dest%20dest_domain%20dest_port%20app%20rule%20action">Firewall events</a>
+    <a href="search?q=%60unifi_admin_access%60%20%7C%20table%20_time%20user%20src%20app%20dvc%20msg">Admin access</a>
+  </collection>
+  <view name="alerts" />
+  <view name="reports" />
+  <collection label="Configure">
+    <a href="/manager/unifi_security/admin/macros?ns=unifi_security&amp;app_only=1">Macros</a>
+    <a href="/manager/unifi_security/saved/searches?app=unifi_security&amp;app_only=1">Alerts &amp; searches</a>
+  </collection>
+</nav>
