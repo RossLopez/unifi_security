@@ -18,6 +18,13 @@ Requires the **UniFi Security Add-on** ([`TA-unifi_security`](https://github.com
 scripts/package.sh
 ```
 
+AppInspect (needs Python 3.9–3.12 and `brew install libmagic`):
+
+```bash
+python3.12 -m venv .venv && .venv/bin/pip install splunk-appinspect
+.venv/bin/splunk-appinspect inspect dist/unifi_security-<version>.spl --mode precert --included-tags cloud
+```
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
