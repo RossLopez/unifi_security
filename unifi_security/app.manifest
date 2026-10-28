@@ -5,11 +5,11 @@
     "id": {
       "group": null,
       "name": "unifi_security",
-      "version": "0.1.4"
+      "version": "0.1.5"
     },
     "author": [
       {
-        "name": "Ross",
+        "name": "Ross Lopez",
         "email": null,
         "company": null
       }

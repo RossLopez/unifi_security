@@ -1,4 +1,4 @@
-# UniFi Security (unifi_security) v0.1.4
+# UniFi Security (unifi_security) v0.1.5
 
 Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`).
 
@@ -26,8 +26,15 @@ All detections ship **disabled**. Enable the ones you want in Settings > Searche
 
 `unifi_index`, `unifi_sudo_expected_users`, `unifi_fw_block_threshold`, `unifi_wifi_fail_threshold`, plus helpers `unifi_is_private(field)` and `unifi_geo(field)`.
 
+## Support
+
+Developer supported, best effort. Report dashboard or detection problems at https://github.com/RossLopez/unifi_security/issues; for parsing or missing fields use https://github.com/RossLopez/TA-unifi_security/issues. Replace real IP addresses, MAC addresses, hostnames, usernames and SSIDs in any log samples you post.
+
+Not supported by Splunk or Ubiquiti.
+
 ## Release notes
 
+- **0.1.5** — Author set to Ross Lopez; added support details.
 - **0.1.4** — Added app icons and logos (`static/`).
 - **0.1.3** — Detections ship disabled, with `schedule_window = auto` and staggered schedules. Added `[id]` stanza and `app.manifest`; update checks enabled.
 - **0.1.2** — Apache 2.0 LICENSE included in the package.

@@ -26,6 +26,12 @@ python3.12 -m venv .venv && .venv/bin/pip install splunk-appinspect
 .venv/bin/splunk-appinspect inspect dist/unifi_security-<version>.spl --mode precert --included-tags cloud
 ```
 
+## Support
+
+Developer supported, best effort. Report dashboard or detection problems at https://github.com/RossLopez/unifi_security/issues; for parsing or missing fields use https://github.com/RossLopez/TA-unifi_security/issues. Replace real IP addresses, MAC addresses, hostnames, usernames and SSIDs in any log samples you post.
+
+Not supported by Splunk or Ubiquiti.
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
