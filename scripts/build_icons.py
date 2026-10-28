@@ -4,7 +4,8 @@
 Writes the SVG sources and a 512px PNG (Splunkbase listing icon) to assets/, and
 the Splunk Web images to unifi_security/static/:
   appIcon.png 36x36, appIcon_2x.png 72x72, appIconAlt*.png (same; the tile has
-  its own dark background), appLogo.png 160x40, appLogo_2x.png 320x80.
+  its own dark background), appLogo.png 160x40, appLogo_2x.png 320x80. The
+  static/ images are full squares (no rounded corners); see square().
 
 Usage:  pip install resvg-py && python3 scripts/build_icons.py
 """
@@ -72,6 +73,11 @@ def logo():
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160">'
             f'<rect width="640" height="160" rx="30" fill="#111C30"/>{inner}{text}</svg>')
 
+def square(svg, rx):
+    """Splunk Web draws app icons on its own blue tile, which shows through
+    transparent rounded corners, so the static/ images fill the whole square."""
+    return svg.replace(f' rx="{rx}"', "", 1)
+
 def png(svg, width, height):
     return bytes(resvg_py.svg_to_bytes(svg_string=svg, width=width, height=height))
 
@@ -86,5 +92,5 @@ if __name__ == "__main__":
     for name, svg, w, h in (("appIcon.png", small, 36, 36), ("appIcon_2x.png", small, 72, 72),
                             ("appIconAlt.png", small, 36, 36), ("appIconAlt_2x.png", small, 72, 72),
                             ("appLogo.png", wide, 160, 40), ("appLogo_2x.png", wide, 320, 80)):
-        (static / name).write_bytes(png(svg, w, h))
+        (static / name).write_bytes(png(square(svg, 30 if svg is wide else 96), w, h))
     print(f"wrote assets/ and {APP}/static/")

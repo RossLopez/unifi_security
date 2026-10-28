@@ -1,4 +1,4 @@
-# UniFi Security (unifi_security) v0.2.0
+# UniFi Security (unifi_security) v0.2.1
 
 Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`) 0.2.0 or later.
 
@@ -34,6 +34,7 @@ Not supported by Splunk or Ubiquiti.
 
 ## Release notes
 
+- **0.2.1** — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
 - **0.2.0** — Searches use the add-on's renamed sourcetypes (`ubiquiti:unifi*`); requires TA-unifi_security 0.2.0 or later.
 - **0.1.5** — Author set to Ross Lopez; added support details.
 - **0.1.4** — Added app icons and logos (`static/`).

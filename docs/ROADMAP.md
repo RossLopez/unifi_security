@@ -27,6 +27,7 @@ Add-on backlog (parsing, ingestion, CIM): [TA-unifi_security/docs/ROADMAP.md](ht
 - [ ] Screenshots; trademark disclaimer; no Ubiquiti logos.
 
 ## Release history
+- 0.2.1 — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
 - 0.2.0 — Macros use the renamed `ubiquiti:unifi*` sourcetypes; requires TA-unifi_security 0.2.0+.
 - 0.1.5 — Author set to Ross Lopez; added support details and a GitHub bug report template.
 - 0.1.4 — Added app icons and logos (`static/`) and `scripts/build_icons.py`.
