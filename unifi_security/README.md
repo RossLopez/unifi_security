@@ -1,6 +1,6 @@
-# UniFi Security (unifi_security) v0.1.5
+# UniFi Security (unifi_security) v0.2.0
 
-Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`).
+Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`) 0.2.0 or later.
 
 ## Dashboard
 
@@ -34,6 +34,7 @@ Not supported by Splunk or Ubiquiti.
 
 ## Release notes
 
+- **0.2.0** — Searches use the add-on's renamed sourcetypes (`ubiquiti:unifi*`); requires TA-unifi_security 0.2.0 or later.
 - **0.1.5** — Author set to Ross Lopez; added support details.
 - **0.1.4** — Added app icons and logos (`static/`).
 - **0.1.3** — Detections ship disabled, with `schedule_window = auto` and staggered schedules. Added `[id]` stanza and `app.manifest`; update checks enabled.
