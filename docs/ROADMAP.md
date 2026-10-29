@@ -23,10 +23,11 @@ Add-on backlog (parsing, ingestion, CIM): [TA-unifi_security/docs/ROADMAP.md](ht
 - [ ] Optional: MITRE ATT&CK annotations, ES RBA / correlation-search compatibility.
 
 ### Listing / docs
-- [ ] README: install-location table, required add-on version, detection tuning.
+- [x] README: install-location table, required add-on version, detection tuning, troubleshooting.
 - [x] Screenshots (`assets/screenshots/`, taken on `unifi_security/scripts/demo_data.py` data); trademark disclaimer; no Ubiquiti logos.
 
 ## Release history
+- 0.2.4 — README: where to install, getting started, detection schedules and throttling, tuning the detections, and troubleshooting.
 - 0.2.3 — Documented supported Splunk versions: Enterprise 9.4–10.6, tested on each in Docker. Added `scripts/compat_test.py`.
 - 0.2.2 — Dashboard tables: set column widths, readable timestamps, admin table drops the redundant `msg` column; wider firewall rule-log panel. Added `scripts/demo_data.py` and listing screenshots.
 - 0.2.1 — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
