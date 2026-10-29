@@ -9,6 +9,8 @@ Requires the **UniFi Security Add-on** ([`TA-unifi_security`](https://github.com
 | Path | Purpose |
 |---|---|
 | `unifi_security/` | The app itself (packaged as-is). See its [README](unifi_security/README.md) for the dashboard, detections and macros. |
+| `scripts/demo_data.py` | Generates sanitized demo UniFi syslog (last 24h) for screenshots and trying the app: `python3 scripts/demo_data.py > demo.log`, then `splunk add oneshot demo.log -index unifi -sourcetype ubiquiti:unifi` |
+| `assets/screenshots/` | Splunkbase listing screenshots, taken on demo data |
 | `scripts/build_icons.py` | Renders `assets/` (SVG sources, 512px Splunkbase listing icon) and the app's `static/` icons and logos (`pip install resvg-py`) |
 | `scripts/package.sh` | Builds `dist/unifi_security-<version>.spl` |
 | `docs/ROADMAP.md` | Backlog, Splunkbase checklist and release history |

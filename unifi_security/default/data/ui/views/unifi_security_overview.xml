@@ -130,7 +130,7 @@
     "ds_ipsev": {
       "type": "ds.search",
       "options": {
-        "query": "`unifi_ips` | `unifi_geo(src)` | table _time src src_country dest dest_port transport signature category severity action direction | sort - _time | head 100",
+        "query": "`unifi_ips` | sort - _time | head 100 | `unifi_geo(src)` | eval time=strftime(_time, \"%Y-%m-%d %H:%M:%S\") | table time src src_country dest dest_port transport signature category severity action direction",
         "queryParameters": {
           "earliest": "$global_time.earliest$",
           "latest": "$global_time.latest$"
@@ -174,7 +174,7 @@
     "ds_admin": {
       "type": "ds.search",
       "options": {
-        "query": "`unifi_admin_access` | `unifi_geo(src)` | table _time user src src_country app dvc msg | sort - _time | head 50",
+        "query": "`unifi_admin_access` | sort - _time | head 50 | `unifi_geo(src)` | eval time=strftime(_time, \"%Y-%m-%d %H:%M:%S\") | table time user src src_country app dvc",
         "queryParameters": {
           "earliest": "$global_time.earliest$",
           "latest": "$global_time.latest$"
@@ -196,7 +196,7 @@
     "ds_rogue": {
       "type": "ds.search",
       "options": {
-        "query": "`unifi_rogue_ap` | stats count latest(_time) as last_seen values(UNIFIwifiChannel) as channel values(UNIFIdetectedByApAndSignalStrength) as detected_by by ssid UNIFIbssid | rename UNIFIbssid as bssid | convert ctime(last_seen)",
+        "query": "`unifi_rogue_ap` | eval detected_by=mvindex(split(UNIFIdetectedByApAndSignalStrength, \", \"), 0) | stats count latest(_time) as last_seen values(UNIFIwifiChannel) as channel values(detected_by) as detected_by by ssid UNIFIbssid | rename UNIFIbssid as bssid | convert ctime(last_seen)",
         "queryParameters": {
           "earliest": "$global_time.earliest$",
           "latest": "$global_time.latest$"
@@ -294,7 +294,31 @@
         "primary": "ds_sigs"
       },
       "title": "Top IPS signatures",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "signature": {
+            "width": 270
+          },
+          "category": {
+            "width": 130
+          },
+          "count": {
+            "width": 85
+          },
+          "sources": {
+            "width": 90
+          },
+          "targets": {
+            "width": 85
+          },
+          "action": {
+            "width": 80
+          },
+          "severity": {
+            "width": 90
+          }
+        }
+      }
     },
     "viz_ipsgeo": {
       "type": "splunk.bar",
@@ -312,7 +336,43 @@
         "primary": "ds_ipsev"
       },
       "title": "Recent IPS events",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "time": {
+            "width": 165
+          },
+          "src": {
+            "width": 125
+          },
+          "src_country": {
+            "width": 130
+          },
+          "dest": {
+            "width": 115
+          },
+          "dest_port": {
+            "width": 95
+          },
+          "transport": {
+            "width": 95
+          },
+          "signature": {
+            "width": 300
+          },
+          "category": {
+            "width": 120
+          },
+          "severity": {
+            "width": 90
+          },
+          "action": {
+            "width": 80
+          },
+          "direction": {
+            "width": 95
+          }
+        }
+      }
     },
     "viz_fwclient": {
       "type": "splunk.bar",
@@ -330,7 +390,22 @@
         "primary": "ds_fwdom"
       },
       "title": "Top blocked destinations",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "destination": {
+            "width": 190
+          },
+          "count": {
+            "width": 75
+          },
+          "clients": {
+            "width": 85
+          },
+          "app": {
+            "width": 90
+          }
+        }
+      }
     },
     "viz_fwrule": {
       "type": "splunk.table",
@@ -338,7 +413,28 @@
         "primary": "ds_fwrule"
       },
       "title": "Firewall / NAT rule log hits (UniFi OS)",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "rule": {
+            "width": 150
+          },
+          "src": {
+            "width": 110
+          },
+          "dest": {
+            "width": 110
+          },
+          "action": {
+            "width": 75
+          },
+          "count": {
+            "width": 70
+          },
+          "dest_port": {
+            "width": 85
+          }
+        }
+      }
     },
     "viz_admin": {
       "type": "splunk.table",
@@ -346,7 +442,28 @@
         "primary": "ds_admin"
       },
       "title": "Admin access",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "time": {
+            "width": 160
+          },
+          "user": {
+            "width": 105
+          },
+          "src": {
+            "width": 115
+          },
+          "src_country": {
+            "width": 125
+          },
+          "app": {
+            "width": 125
+          },
+          "dvc": {
+            "width": 90
+          }
+        }
+      }
     },
     "viz_wifi": {
       "type": "splunk.table",
@@ -354,7 +471,16 @@
         "primary": "ds_wifi"
       },
       "title": "WiFi auth failures by client MAC",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "src_mac": {
+            "width": 160
+          },
+          "last_seen": {
+            "width": 170
+          }
+        }
+      }
     },
     "viz_rogue": {
       "type": "splunk.table",
@@ -362,7 +488,28 @@
         "primary": "ds_rogue"
       },
       "title": "Rogue / impersonating APs",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "ssid": {
+            "width": 100
+          },
+          "bssid": {
+            "width": 150
+          },
+          "count": {
+            "width": 75
+          },
+          "last_seen": {
+            "width": 160
+          },
+          "channel": {
+            "width": 85
+          },
+          "detected_by": {
+            "width": 150
+          }
+        }
+      }
     },
     "viz_priv": {
       "type": "splunk.table",
@@ -370,7 +517,34 @@
         "primary": "ds_priv"
       },
       "title": "Privileged activity on UniFi OS (sudo / SSH)",
-      "options": {}
+      "options": {
+        "columnFormat": {
+          "host": {
+            "width": 70
+          },
+          "app": {
+            "width": 60
+          },
+          "src_user": {
+            "width": 105
+          },
+          "user": {
+            "width": 70
+          },
+          "action": {
+            "width": 80
+          },
+          "count": {
+            "width": 75
+          },
+          "last_seen": {
+            "width": 150
+          },
+          "command": {
+            "width": 110
+          }
+        }
+      }
     }
   },
   "layout": {
@@ -490,7 +664,7 @@
         "position": {
           "x": 0,
           "y": 990,
-          "w": 480,
+          "w": 400,
           "h": 320
         }
       },
@@ -498,9 +672,9 @@
         "item": "viz_fwdom",
         "type": "block",
         "position": {
-          "x": 480,
+          "x": 400,
           "y": 990,
-          "w": 480,
+          "w": 440,
           "h": 320
         }
       },
@@ -508,9 +682,9 @@
         "item": "viz_fwrule",
         "type": "block",
         "position": {
-          "x": 960,
+          "x": 840,
           "y": 990,
-          "w": 480,
+          "w": 600,
           "h": 320
         }
       },

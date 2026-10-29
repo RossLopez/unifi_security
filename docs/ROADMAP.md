@@ -24,9 +24,10 @@ Add-on backlog (parsing, ingestion, CIM): [TA-unifi_security/docs/ROADMAP.md](ht
 
 ### Listing / docs
 - [ ] README: install-location table, required add-on version, detection tuning.
-- [ ] Screenshots; trademark disclaimer; no Ubiquiti logos.
+- [x] Screenshots (`assets/screenshots/`, taken on `unifi_security/scripts/demo_data.py` data); trademark disclaimer; no Ubiquiti logos.
 
 ## Release history
+- 0.2.2 — Dashboard tables: set column widths, readable timestamps, admin table drops the redundant `msg` column; wider firewall rule-log panel. Added `scripts/demo_data.py` and listing screenshots.
 - 0.2.1 — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
 - 0.2.0 — Macros use the renamed `ubiquiti:unifi*` sourcetypes; requires TA-unifi_security 0.2.0+.
 - 0.1.5 — Author set to Ross Lopez; added support details and a GitHub bug report template.
