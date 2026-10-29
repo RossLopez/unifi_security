@@ -19,7 +19,7 @@ Add-on backlog (parsing, ingestion, CIM): [TA-unifi_security/docs/ROADMAP.md](ht
 ### App content
 - [ ] Replace hourly `earliest=-30d` searches (new admin source, new device) with KV store/lookup baselines or `tstats` on accelerated CIM data models.
 - [ ] Portable index macro default + setup page (index, thresholds, expected sudo accounts); move sudo allowlist to a lookup.
-- [ ] Declare minimum Splunk version (Dashboard Studio: 9.x+).
+- [x] Supported Splunk versions: Enterprise 9.4–10.6, tested with `scripts/compat_test.py` (9.4.16, 10.0.11, 10.2.8, 10.4.2, 10.6.1).
 - [ ] Optional: MITRE ATT&CK annotations, ES RBA / correlation-search compatibility.
 
 ### Listing / docs
@@ -27,6 +27,7 @@ Add-on backlog (parsing, ingestion, CIM): [TA-unifi_security/docs/ROADMAP.md](ht
 - [x] Screenshots (`assets/screenshots/`, taken on `unifi_security/scripts/demo_data.py` data); trademark disclaimer; no Ubiquiti logos.
 
 ## Release history
+- 0.2.3 — Documented supported Splunk versions: Enterprise 9.4–10.6, tested on each in Docker. Added `scripts/compat_test.py`.
 - 0.2.2 — Dashboard tables: set column widths, readable timestamps, admin table drops the redundant `msg` column; wider firewall rule-log panel. Added `scripts/demo_data.py` and listing screenshots.
 - 0.2.1 — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
 - 0.2.0 — Macros use the renamed `ubiquiti:unifi*` sourcetypes; requires TA-unifi_security 0.2.0+.

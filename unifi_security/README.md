@@ -1,6 +1,11 @@
-# UniFi Security (unifi_security) v0.2.2
+# UniFi Security (unifi_security) v0.2.3
 
 Search-head app with security content for UniFi data. Requires the **UniFi Security Add-on** (`TA-unifi_security`) 0.2.0 or later.
+
+## Compatibility
+
+- Splunk Enterprise 9.4, 10.0, 10.2, 10.4 and 10.6 (tested on 9.4.16, 10.0.11, 10.2.8, 10.4.2 and 10.6.1).
+- Splunk Cloud Platform: passes AppInspect's Splunk Cloud checks; not yet tested on a Cloud stack.
 
 ## Dashboard
 
@@ -34,6 +39,7 @@ Not supported by Splunk or Ubiquiti.
 
 ## Release notes
 
+- **0.2.3** — Documented supported Splunk versions: Enterprise 9.4–10.6, tested on each in Docker.
 - **0.2.2** — Dashboard tables: set column widths, readable timestamps, admin table drops the redundant `msg` column; wider firewall rule-log panel.
 - **0.2.1** — Splunk Web icons and logos fill the whole square; Splunk 10 showed its blue icon background through the transparent rounded corners.
 - **0.2.0** — Searches use the add-on's renamed sourcetypes (`ubiquiti:unifi*`); requires TA-unifi_security 0.2.0 or later.
